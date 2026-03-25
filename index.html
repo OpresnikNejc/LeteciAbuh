@@ -53,21 +53,25 @@ canvas.width = WIDTH;
 canvas.height = HEIGHT;
 
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-const SCALE = isMobile ? Math.min(WIDTH / 420, HEIGHT / 740) : Math.min(WIDTH / 460, HEIGHT / 680);
 
-let baseSpeed = 4.8;
+// Boljši scale za telefon - manj stisnjeno
+const SCALE = isMobile ? 
+    Math.min(WIDTH / 480, HEIGHT / 850) : 
+    Math.min(WIDTH / 460, HEIGHT / 680);
+
+let baseSpeed = 4.7;
 let currentSpeed = baseSpeed;
-let currentGap = isMobile ? 205 : 195;
+let currentGap = isMobile ? 235 : 195;   // veliko večji gap na telefonu
 
-const GRAVITY = 0.71;
-const FLAP_STRENGTH = -11.5;
-const PIPE_WIDTH = 80 * SCALE;
+const GRAVITY = 0.68;
+const FLAP_STRENGTH = -11.0;
+const PIPE_WIDTH = 78 * SCALE;
 
 let bird = {
-    x: WIDTH * (isMobile ? 0.23 : 0.25),
-    y: HEIGHT * 0.42,
-    width: isMobile ? 52 * SCALE : 48 * SCALE,
-    height: isMobile ? 39 * SCALE : 36 * SCALE,
+    x: WIDTH * (isMobile ? 0.24 : 0.25),
+    y: HEIGHT * 0.40,
+    width: isMobile ? 46 * SCALE : 48 * SCALE,
+    height: isMobile ? 34 * SCALE : 36 * SCALE,
     velocity: 0,
     rotation: 0
 };
@@ -101,7 +105,6 @@ window.addEventListener("resize", () => {
     canvas.height = HEIGHT;
 });
 
-// ================== DRAW FUNCTIONS ==================
 function drawBackground() {
     ctx.fillStyle = "#70c5ee";
     ctx.fillRect(0, 0, WIDTH, HEIGHT);
@@ -139,25 +142,25 @@ function drawBird() {
 }
 
 function spawnPipe() {
-    const minHeight = 75 * SCALE;
-    const maxHeight = HEIGHT - currentGap * SCALE - 180 * SCALE;
+    const minHeight = 80 * SCALE;
+    const maxHeight = HEIGHT - currentGap * SCALE - 190 * SCALE;
 
     let topHeight;
-    if (pipeSpawnCounter < 4) {
-        const base = minHeight + (maxHeight - minHeight) * 0.48;
-        topHeight = base + (Math.random() - 0.5) * 55 * SCALE;
+    if (pipeSpawnCounter < 5) {
+        const base = minHeight + (maxHeight - minHeight) * 0.5;
+        topHeight = base + (Math.random() - 0.5) * 60 * SCALE;
     } else {
         const rand = Math.random();
-        if (rand < 0.20) topHeight = minHeight + (maxHeight - minHeight) * (0.06 + Math.random() * 0.20);
-        else if (rand < 0.42) topHeight = minHeight + (maxHeight - minHeight) * (0.72 + Math.random() * 0.20);
-        else if (rand < 0.68) topHeight = minHeight + (maxHeight - minHeight) * (0.30 + Math.random() * 0.22);
+        if (rand < 0.22) topHeight = minHeight + (maxHeight - minHeight) * (0.10 + Math.random() * 0.22);
+        else if (rand < 0.45) topHeight = minHeight + (maxHeight - minHeight) * (0.68 + Math.random() * 0.22);
+        else if (rand < 0.70) topHeight = minHeight + (maxHeight - minHeight) * (0.32 + Math.random() * 0.20);
         else topHeight = minHeight + (maxHeight - minHeight) * (0.55 + Math.random() * 0.20);
 
-        topHeight += (Math.random() - 0.5) * 35 * SCALE;
+        topHeight += (Math.random() - 0.5) * 40 * SCALE;
     }
 
     topHeight = Math.max(minHeight, Math.min(maxHeight, topHeight));
-    pipes.push({ x: WIDTH + 45, top: topHeight, passed: false });
+    pipes.push({ x: WIDTH + 50, top: topHeight, passed: false });
     pipeSpawnCounter++;
 }
 
@@ -165,17 +168,17 @@ function update() {
     if (!started || gameOver || paused) return;
 
     const level = Math.floor(score / 8);
-    currentSpeed = baseSpeed + level * 0.52;
-    currentSpeed = Math.min(currentSpeed, 9.8);
+    currentSpeed = baseSpeed + level * 0.48;
+    currentSpeed = Math.min(currentSpeed, 9.5);
 
-    currentGap = (isMobile ? 205 : 195) - level * 12;
-    currentGap = Math.max(105, currentGap);
+    currentGap = (isMobile ? 235 : 195) - level * 11;
+    currentGap = Math.max(118, currentGap);
 
     bird.velocity += GRAVITY;
     bird.y += bird.velocity;
     bird.rotation = Math.min(Math.max(bird.velocity * 4.0, -34), 90);
 
-    const spawnRate = Math.max(24, 55 - level * 6);
+    const spawnRate = Math.max(26, 58 - level * 5);
     if (frame % spawnRate === 0) spawnPipe();
 
     for (let i = pipes.length - 1; i >= 0; i--) {
@@ -188,7 +191,7 @@ function update() {
         }
 
         if (bird.x + bird.width > p.x && bird.x < p.x + PIPE_WIDTH &&
-            (bird.y + 10*SCALE < p.top || bird.y + bird.height - 10*SCALE > p.top + currentGap*SCALE)) {
+            (bird.y + 12*SCALE < p.top || bird.y + bird.height - 12*SCALE > p.top + currentGap*SCALE)) {
             gameOver = true;
             saveHighScore();
         }
@@ -196,7 +199,7 @@ function update() {
         if (p.x < -PIPE_WIDTH) pipes.splice(i, 1);
     }
 
-    if (bird.y < 0 || bird.y + bird.height > HEIGHT - 100 * SCALE) {
+    if (bird.y < 0 || bird.y + bird.height > HEIGHT - 105 * SCALE) {
         gameOver = true;
         saveHighScore();
     }
@@ -224,7 +227,6 @@ function draw() {
 
     drawBird();
 
-    // Start Screen
     if (!started && !gameOver) {
         ctx.fillStyle = "rgba(0,0,0,0.45)";
         ctx.fillRect(0, 0, WIDTH, HEIGHT);
@@ -249,7 +251,6 @@ function draw() {
         return;
     }
 
-    // Score med igro
     ctx.fillStyle = "white";
     ctx.shadowBlur = 12;
     ctx.font = `bold ${62 * SCALE}px Arial`;
@@ -268,7 +269,6 @@ function draw() {
         ctx.lineTo(WIDTH * 0.505, HEIGHT * 0.78);
         ctx.stroke();
 
-        // Leva sekcija
         ctx.fillStyle = "#ff3333";
         ctx.font = `bold ${78 * SCALE}px Arial`;
         ctx.textAlign = "center";
@@ -280,14 +280,13 @@ function draw() {
         ctx.font = `bold ${85 * SCALE}px Arial`;
         ctx.fillText(score, WIDTH * 0.27, HEIGHT * 0.57);
 
-        // Desna sekcija
         ctx.fillStyle = "#ffffff";
         ctx.font = `bold ${36 * SCALE}px Arial`;
         ctx.textAlign = "center";
         ctx.fillText("NAJBOLJŠI REZULTATI", WIDTH * 0.78, HEIGHT * 0.22);
 
         const tableX = WIDTH * 0.67;
-        const startY = HEIGHT * 0.32;
+        const startY = HEIGHT * 0.33;
         const lineHeight = 46 * SCALE;
 
         ctx.font = `bold ${29 * SCALE}px Arial`;
@@ -315,7 +314,7 @@ function draw() {
         }
 
         ctx.fillStyle = "#ffcc00";
-        ctx.fillRect(WIDTH / 2 - 210 * SCALE, HEIGHT * 0.80, 420 * SCALE, 95 * SCALE);
+        ctx.fillRect(WIDTH / 2 - 205 * SCALE, HEIGHT * 0.80, 410 * SCALE, 95 * SCALE);
 
         ctx.fillStyle = "#000000";
         ctx.font = `bold ${36 * SCALE}px Arial`;
@@ -374,7 +373,7 @@ function resetGame() {
     pipes = [];
     score = 0;
     currentSpeed = baseSpeed;
-    currentGap = isMobile ? 205 : 195;
+    currentGap = isMobile ? 235 : 195;
     gameOver = false;
     paused = false;
     frame = 0;
