@@ -53,7 +53,7 @@ canvas.width = WIDTH;
 canvas.height = HEIGHT;
 
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-const SCALE = isMobile ? Math.min(WIDTH / 500, HEIGHT / 900) : Math.min(WIDTH / 460, HEIGHT / 680);
+const SCALE = isMobile ? Math.min(WIDTH / 520, HEIGHT / 920) : Math.min(WIDTH / 460, HEIGHT / 680);
 
 let baseSpeed = 4.7;
 let currentSpeed = baseSpeed;
@@ -66,8 +66,8 @@ const PIPE_WIDTH = 78 * SCALE;
 let bird = {
     x: WIDTH * (isMobile ? 0.24 : 0.25),
     y: HEIGHT * 0.40,
-    width: isMobile ? 44 * SCALE : 48 * SCALE,
-    height: isMobile ? 33 * SCALE : 36 * SCALE,
+    width: isMobile ? 42 * SCALE : 48 * SCALE,
+    height: isMobile ? 31 * SCALE : 36 * SCALE,
     velocity: 0,
     rotation: 0
 };
@@ -227,7 +227,7 @@ function draw() {
         ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
         ctx.fillStyle = "#ffffff";
-        ctx.font = `bold ${isMobile ? 62 : 78}px Arial`;
+        ctx.font = `bold ${isMobile ? 58 : 78}px Arial`;
         ctx.textAlign = "center";
         ctx.shadowBlur = 20;
         ctx.shadowColor = "#000";
@@ -235,8 +235,8 @@ function draw() {
         ctx.shadowBlur = 0;
 
         ctx.fillStyle = "#ffdd33";
-        ctx.font = `bold ${isMobile ? 34 : 42}px Arial`;
-        ctx.fillText("TAP TO START", WIDTH / 2, HEIGHT * 0.53);
+        ctx.font = `bold ${isMobile ? 32 : 42}px Arial`;
+        ctx.fillText("TAP TO START", WIDTH / 2, HEIGHT * 0.54);
 
         if (highScores.length > 0) {
             ctx.fillStyle = "#ffffff";
@@ -249,9 +249,9 @@ function draw() {
     // Score med igro
     ctx.fillStyle = "white";
     ctx.shadowBlur = 12;
-    ctx.font = `bold ${isMobile ? 54 : 62}px Arial`;
+    ctx.font = `bold ${isMobile ? 52 : 62}px Arial`;
     ctx.textAlign = "center";
-    ctx.fillText(score, WIDTH / 2, 85 * SCALE);
+    ctx.fillText(score, WIDTH / 2, 82 * SCALE);
     ctx.shadowBlur = 0;
 
     if (gameOver) {
@@ -265,57 +265,57 @@ function draw() {
         ctx.lineTo(WIDTH * 0.51, HEIGHT * 0.78);
         ctx.stroke();
 
-        // Leva sekcija
+        // Leva sekcija - zelo zmanjšano za telefon
         ctx.fillStyle = "#ff3333";
-        ctx.font = `bold ${isMobile ? 58 : 78}px Arial`;
+        ctx.font = `bold ${isMobile ? 52 : 78}px Arial`;
         ctx.textAlign = "center";
-        ctx.fillText("GAME OVER", WIDTH * 0.27, HEIGHT * 0.23);
+        ctx.fillText("GAME OVER", WIDTH * 0.27, HEIGHT * 0.24);
 
         ctx.fillStyle = "#ffdd33";
-        ctx.font = `bold ${isMobile ? 36 : 46}px Arial`;
-        ctx.fillText("Tvoj rezultat", WIDTH * 0.27, HEIGHT * 0.44);
+        ctx.font = `bold ${isMobile ? 34 : 46}px Arial`;
+        ctx.fillText("Tvoj rezultat", WIDTH * 0.27, HEIGHT * 0.46);
         ctx.font = `bold ${isMobile ? 68 : 85}px Arial`;
-        ctx.fillText(score, WIDTH * 0.27, HEIGHT * 0.57);
+        ctx.fillText(score, WIDTH * 0.27, HEIGHT * 0.58);
 
-        // Desna sekcija
+        // Desna sekcija - tabela
         ctx.fillStyle = "#ffffff";
-        ctx.font = `bold ${isMobile ? 30 : 36}px Arial`;
+        ctx.font = `bold ${isMobile ? 29 : 36}px Arial`;
         ctx.textAlign = "center";
         ctx.fillText("NAJBOLJŠI REZULTATI", WIDTH * 0.78, HEIGHT * 0.23);
 
         const tableX = WIDTH * 0.68;
         const startY = HEIGHT * 0.34;
-        const lineHeight = isMobile ? 40 * SCALE : 46 * SCALE;
+        const lineHeight = isMobile ? 38 * SCALE : 46 * SCALE;
 
-        ctx.font = `bold ${isMobile ? 25 : 29}px Arial`;
+        ctx.font = `bold ${isMobile ? 24 : 29}px Arial`;
         ctx.textAlign = "left";
 
         for (let i = 0; i < 5; i++) {
             const y = startY + i * lineHeight;
 
-            ctx.strokeStyle = "rgba(255,255,255,0.35)";
+            ctx.strokeStyle = "rgba(255,255,255,0.4)";
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.moveTo(tableX, y + 12*SCALE);
-            ctx.lineTo(tableX + 155*SCALE, y + 12*SCALE);
+            ctx.moveTo(tableX, y + 10*SCALE);
+            ctx.lineTo(tableX + 150*SCALE, y + 10*SCALE);
             ctx.stroke();
 
             if (highScores[i] !== undefined) {
                 ctx.fillStyle = "#ffffff";
                 ctx.fillText(`${i+1}.`, tableX, y);
-                ctx.fillText(highScores[i], tableX + 70*SCALE, y);
+                ctx.fillText(highScores[i], tableX + 68*SCALE, y);
             } else {
-                ctx.fillStyle = "rgba(255,255,255,0.4)";
+                ctx.fillStyle = "rgba(255,255,255,0.35)";
                 ctx.fillText(`${i+1}.`, tableX, y);
-                ctx.fillText("—", tableX + 70*SCALE, y);
+                ctx.fillText("—", tableX + 68*SCALE, y);
             }
         }
 
         ctx.fillStyle = "#ffcc00";
-        ctx.fillRect(WIDTH / 2 - 195 * SCALE, HEIGHT * 0.81, 390 * SCALE, 88 * SCALE);
+        ctx.fillRect(WIDTH / 2 - 195 * SCALE, HEIGHT * 0.81, 390 * SCALE, 85 * SCALE);
 
         ctx.fillStyle = "#000000";
-        ctx.font = `bold ${isMobile ? 32 : 36}px Arial`;
+        ctx.font = `bold ${isMobile ? 30 : 36}px Arial`;
         ctx.textAlign = "center";
         ctx.fillText("PONOVNO POSKUSI", WIDTH / 2, HEIGHT * 0.855);
     }
@@ -324,7 +324,7 @@ function draw() {
         ctx.fillStyle = "rgba(0,0,0,0.7)";
         ctx.fillRect(0, 0, WIDTH, HEIGHT);
         ctx.fillStyle = "#fff";
-        ctx.font = `bold ${isMobile ? 55 : 70}px Arial`;
+        ctx.font = `bold ${isMobile ? 52 : 70}px Arial`;
         ctx.textAlign = "center";
         ctx.fillText("PAUSED", WIDTH / 2, HEIGHT / 2);
     }
