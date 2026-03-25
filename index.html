@@ -53,11 +53,11 @@ canvas.width = WIDTH;
 canvas.height = HEIGHT;
 
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-const SCALE = isMobile ? Math.min(WIDTH / 480, HEIGHT / 850) : Math.min(WIDTH / 460, HEIGHT / 680);
+const SCALE = isMobile ? Math.min(WIDTH / 500, HEIGHT / 900) : Math.min(WIDTH / 460, HEIGHT / 680);
 
 let baseSpeed = 4.7;
 let currentSpeed = baseSpeed;
-let currentGap = isMobile ? 235 : 195;
+let currentGap = isMobile ? 245 : 195;
 
 const GRAVITY = 0.68;
 const FLAP_STRENGTH = -11.0;
@@ -137,25 +137,25 @@ function drawBird() {
 }
 
 function spawnPipe() {
-    const minHeight = 80 * SCALE;
-    const maxHeight = HEIGHT - currentGap * SCALE - 190 * SCALE;
+    const minHeight = 85 * SCALE;
+    const maxHeight = HEIGHT - currentGap * SCALE - 195 * SCALE;
 
     let topHeight;
     if (pipeSpawnCounter < 5) {
-        const base = minHeight + (maxHeight - minHeight) * 0.48;
-        topHeight = base + (Math.random() - 0.5) * 60 * SCALE;
+        const base = minHeight + (maxHeight - minHeight) * 0.5;
+        topHeight = base + (Math.random() - 0.5) * 65 * SCALE;
     } else {
         const rand = Math.random();
-        if (rand < 0.22) topHeight = minHeight + (maxHeight - minHeight) * (0.10 + Math.random() * 0.22);
-        else if (rand < 0.45) topHeight = minHeight + (maxHeight - minHeight) * (0.68 + Math.random() * 0.22);
-        else if (rand < 0.70) topHeight = minHeight + (maxHeight - minHeight) * (0.32 + Math.random() * 0.20);
+        if (rand < 0.22) topHeight = minHeight + (maxHeight - minHeight) * (0.12 + Math.random() * 0.20);
+        else if (rand < 0.45) topHeight = minHeight + (maxHeight - minHeight) * (0.68 + Math.random() * 0.20);
+        else if (rand < 0.70) topHeight = minHeight + (maxHeight - minHeight) * (0.33 + Math.random() * 0.20);
         else topHeight = minHeight + (maxHeight - minHeight) * (0.55 + Math.random() * 0.20);
 
         topHeight += (Math.random() - 0.5) * 40 * SCALE;
     }
 
     topHeight = Math.max(minHeight, Math.min(maxHeight, topHeight));
-    pipes.push({ x: WIDTH + 50, top: topHeight, passed: false });
+    pipes.push({ x: WIDTH + 55, top: topHeight, passed: false });
     pipeSpawnCounter++;
 }
 
@@ -166,14 +166,14 @@ function update() {
     currentSpeed = baseSpeed + level * 0.48;
     currentSpeed = Math.min(currentSpeed, 9.5);
 
-    currentGap = (isMobile ? 235 : 195) - level * 11;
-    currentGap = Math.max(118, currentGap);
+    currentGap = (isMobile ? 245 : 195) - level * 11;
+    currentGap = Math.max(125, currentGap);
 
     bird.velocity += GRAVITY;
     bird.y += bird.velocity;
     bird.rotation = Math.min(Math.max(bird.velocity * 4.0, -34), 90);
 
-    const spawnRate = Math.max(26, 58 - level * 5);
+    const spawnRate = Math.max(28, 60 - level * 5);
     if (frame % spawnRate === 0) spawnPipe();
 
     for (let i = pipes.length - 1; i >= 0; i--) {
@@ -227,7 +227,7 @@ function draw() {
         ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
         ctx.fillStyle = "#ffffff";
-        ctx.font = `bold ${isMobile ? 68 : 78}px Arial`;   // manjše na telefonu
+        ctx.font = `bold ${isMobile ? 62 : 78}px Arial`;
         ctx.textAlign = "center";
         ctx.shadowBlur = 20;
         ctx.shadowColor = "#000";
@@ -235,8 +235,8 @@ function draw() {
         ctx.shadowBlur = 0;
 
         ctx.fillStyle = "#ffdd33";
-        ctx.font = `bold ${isMobile ? 36 : 42}px Arial`;
-        ctx.fillText("TAP TO START", WIDTH / 2, HEIGHT * 0.54);
+        ctx.font = `bold ${isMobile ? 34 : 42}px Arial`;
+        ctx.fillText("TAP TO START", WIDTH / 2, HEIGHT * 0.53);
 
         if (highScores.length > 0) {
             ctx.fillStyle = "#ffffff";
@@ -249,7 +249,7 @@ function draw() {
     // Score med igro
     ctx.fillStyle = "white";
     ctx.shadowBlur = 12;
-    ctx.font = `bold ${isMobile ? 56 : 62}px Arial`;
+    ctx.font = `bold ${isMobile ? 54 : 62}px Arial`;
     ctx.textAlign = "center";
     ctx.fillText(score, WIDTH / 2, 85 * SCALE);
     ctx.shadowBlur = 0;
@@ -259,72 +259,72 @@ function draw() {
         ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
         ctx.strokeStyle = "rgba(255,255,255,0.35)";
-        ctx.lineWidth = 6;
+        ctx.lineWidth = 5;
         ctx.beginPath();
-        ctx.moveTo(WIDTH * 0.505, HEIGHT * 0.12);
-        ctx.lineTo(WIDTH * 0.505, HEIGHT * 0.78);
+        ctx.moveTo(WIDTH * 0.51, HEIGHT * 0.15);
+        ctx.lineTo(WIDTH * 0.51, HEIGHT * 0.78);
         ctx.stroke();
 
-        // Leva sekcija - manjši teksti na telefonu
+        // Leva sekcija
         ctx.fillStyle = "#ff3333";
-        ctx.font = `bold ${isMobile ? 62 : 78}px Arial`;
+        ctx.font = `bold ${isMobile ? 58 : 78}px Arial`;
         ctx.textAlign = "center";
-        ctx.fillText("GAME OVER", WIDTH * 0.27, HEIGHT * 0.22);
+        ctx.fillText("GAME OVER", WIDTH * 0.27, HEIGHT * 0.23);
 
         ctx.fillStyle = "#ffdd33";
-        ctx.font = `bold ${isMobile ? 38 : 46}px Arial`;
+        ctx.font = `bold ${isMobile ? 36 : 46}px Arial`;
         ctx.fillText("Tvoj rezultat", WIDTH * 0.27, HEIGHT * 0.44);
-        ctx.font = `bold ${isMobile ? 72 : 85}px Arial`;
+        ctx.font = `bold ${isMobile ? 68 : 85}px Arial`;
         ctx.fillText(score, WIDTH * 0.27, HEIGHT * 0.57);
 
         // Desna sekcija
         ctx.fillStyle = "#ffffff";
-        ctx.font = `bold ${isMobile ? 32 : 36}px Arial`;
+        ctx.font = `bold ${isMobile ? 30 : 36}px Arial`;
         ctx.textAlign = "center";
-        ctx.fillText("NAJBOLJŠI REZULTATI", WIDTH * 0.78, HEIGHT * 0.22);
+        ctx.fillText("NAJBOLJŠI REZULTATI", WIDTH * 0.78, HEIGHT * 0.23);
 
-        const tableX = WIDTH * 0.67;
-        const startY = HEIGHT * 0.33;
-        const lineHeight = isMobile ? 42 * SCALE : 46 * SCALE;
+        const tableX = WIDTH * 0.68;
+        const startY = HEIGHT * 0.34;
+        const lineHeight = isMobile ? 40 * SCALE : 46 * SCALE;
 
-        ctx.font = `bold ${isMobile ? 26 : 29}px Arial`;
+        ctx.font = `bold ${isMobile ? 25 : 29}px Arial`;
         ctx.textAlign = "left";
 
         for (let i = 0; i < 5; i++) {
             const y = startY + i * lineHeight;
 
-            ctx.strokeStyle = "rgba(255,255,255,0.4)";
+            ctx.strokeStyle = "rgba(255,255,255,0.35)";
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(tableX, y + 12*SCALE);
-            ctx.lineTo(tableX + 160*SCALE, y + 12*SCALE);
+            ctx.lineTo(tableX + 155*SCALE, y + 12*SCALE);
             ctx.stroke();
 
             if (highScores[i] !== undefined) {
                 ctx.fillStyle = "#ffffff";
                 ctx.fillText(`${i+1}.`, tableX, y);
-                ctx.fillText(highScores[i], tableX + 75*SCALE, y);
+                ctx.fillText(highScores[i], tableX + 70*SCALE, y);
             } else {
                 ctx.fillStyle = "rgba(255,255,255,0.4)";
                 ctx.fillText(`${i+1}.`, tableX, y);
-                ctx.fillText("—", tableX + 75*SCALE, y);
+                ctx.fillText("—", tableX + 70*SCALE, y);
             }
         }
 
         ctx.fillStyle = "#ffcc00";
-        ctx.fillRect(WIDTH / 2 - 200 * SCALE, HEIGHT * 0.80, 400 * SCALE, 90 * SCALE);
+        ctx.fillRect(WIDTH / 2 - 195 * SCALE, HEIGHT * 0.81, 390 * SCALE, 88 * SCALE);
 
         ctx.fillStyle = "#000000";
         ctx.font = `bold ${isMobile ? 32 : 36}px Arial`;
         ctx.textAlign = "center";
-        ctx.fillText("PONOVNO POSKUSI", WIDTH / 2, HEIGHT * 0.845);
+        ctx.fillText("PONOVNO POSKUSI", WIDTH / 2, HEIGHT * 0.855);
     }
 
     if (paused && !gameOver) {
         ctx.fillStyle = "rgba(0,0,0,0.7)";
         ctx.fillRect(0, 0, WIDTH, HEIGHT);
         ctx.fillStyle = "#fff";
-        ctx.font = `bold ${isMobile ? 58 : 70}px Arial`;
+        ctx.font = `bold ${isMobile ? 55 : 70}px Arial`;
         ctx.textAlign = "center";
         ctx.fillText("PAUSED", WIDTH / 2, HEIGHT / 2);
     }
@@ -371,7 +371,7 @@ function resetGame() {
     pipes = [];
     score = 0;
     currentSpeed = baseSpeed;
-    currentGap = isMobile ? 235 : 195;
+    currentGap = isMobile ? 245 : 195;
     gameOver = false;
     paused = false;
     frame = 0;
